@@ -9,9 +9,13 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/barlow": "^0.2.3",
+    "@expo-google-fonts/inter": "^0.2.3",
+    "@expo-google-fonts/roboto": "^0.2.3",
     "@react-navigation/bottom-tabs": "^6.5.14",
     "@react-navigation/native": "^6.1.12",
     "expo": "~50.0.7",
+    "expo-font": "~11.10.3",
     "expo-image": "^1.10.6",
     "expo-router": "^3.4.7",
     "expo-status-bar": "~1.11.1",
