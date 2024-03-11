@@ -13,7 +13,7 @@ const Input = ({children}) =>{
 
 const styles =StyleSheet.create({
     inputCont: {
-        width: 272,
+        width: '100%',
         backgroundColor: "#E5E5E5",
         height: 40,
         borderColor: 'gray',
@@ -21,7 +21,7 @@ const styles =StyleSheet.create({
         borderRadius: 0,
         padding: 10,
         marginBottom: 10,
-
+        borderRadius:6.25
     },
     text:{
         color: '#0FA958',

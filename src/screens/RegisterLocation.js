@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button} from 'react-native';
+import { StyleSheet, Text, View, Button, ScrollView} from 'react-native';
 import Input from '../components/input';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import {useFonts,Barlow_500Medium,Barlow_600SemiBold,Barlow_700Bold} from '@expo-google-fonts/barlow'
 
-const RegisterLocation = () => {
+export function RegisterLocation  ({navigation})  {
   const handleProximo = () => {
 
   };
+  let [fontsLoaded] = useFonts({Barlow_500Medium,Barlow_600SemiBold,Barlow_700Bold})
 
+  if(!fontsLoaded){
+    return null
+  }
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Cadastro do Localr</Text>
-      
-      <Input><Text>ID do Sensor:</Text></Input>
-      <Input><Text>Nome:</Text></Input>
-      <Input><Text>Descrição:</Text></Input>
-      <Input><Text>Bloco:</Text></Input>
-      <Input><Text>Nível:</Text></Input>
-      <Input><Text>Campus:</Text></Input>
-      <Button style={styles.buttn} height={40} color={'#0FA958'} title="Próximo" onPress={handleProximo} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.titulo}>CADASTRO LOCAL</Text>
+      <ScrollView>
+        <Input><Text style={styles.text}>ID do Sensor:</Text></Input>
+        <Input><Text style={styles.text}>Nome:</Text></Input>
+        <Input><Text style={styles.text}>Descrição:</Text></Input>
+        <Input><Text style={styles.text}>Bloco:</Text></Input>
+        <Input><Text style={styles.text}>Nível:</Text></Input>
+        <Input><Text style={styles.text}>Campus:</Text></Input>
+      </ScrollView>
+      <Button style={styles.buttn} height={70} color={'#0FA958'} title="Próximo" onPress={() => navigation.navigate('Sensor')} />
+    </SafeAreaView>
   );
 };
 
@@ -29,14 +36,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0FFF8'
   },
   titulo: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 24
+    fontSize: 25,
+    marginBottom: 24,
+    fontFamily:'Barlow_700Bold'
   },
   buttn:{
     height: 40,
+    fontFamily:'Barlow_700Bold'
 
+  },
+  text:{
+    fontSize:18,
+    fontFamily:'Barlow_600SemiBold'
   }
 });
-
-export default RegisterLocation;
