@@ -1,17 +1,47 @@
-import React, { Component } from 'react';
+import React, { Component,useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, TextInput,Text, View, ScrollView} from 'react-native';
 import SpeedDometer from '../components/speedometer';
 import HeaderNotification from '../components/HeaderInformation';
 import BoxIQAR from '../components/BoxIQAR';
 import {useFonts,Barlow_700Bold} from '@expo-google-fonts/barlow'
-
-
+import * as Location from 'expo-location'
+import { distaceCalculator } from '../helpers/Haversine';
+import { methodGet } from '../helpers/GetAxios';
 export default function Home(){
-  let [fontsLoaded] = useFonts({Barlow_700Bold})
+  const [location,setLocation] = useState()
+  useEffect(()=>{
+     const getPermissions = async () => {
+      let {status} = await Location.requestForegroundPermissionsAsync()
+      if(status !== 'granted'){
+        console.log("Please grant location Permissions")
+        return
+      }
+      let currentLocation = await Location.getCurrentPositionAsync({})
+      setLocation(currentLocation)
 
+      console.log("Location:")
+      console.log(currentLocation)
+     // distaceCalculator(currentLocation.coords.latitude,currentLocation.coords.longitude,-5.334071,-49.088110)
+    }
+
+      
+     const interval = setInterval(async() => {
+        getPermissions()
+        const getRooms =  await methodGet('http://10.204.20.139:4000/show-all-rooms').then((response)=> {return response}).catch(error => console.log(Object.values(error)))
+        getRooms.rooms.map((room)=>{
+           distaceCalculator(location.coords.latitude,location.coords.longitude,room.lat,room.long)
+           console.log('------------',room,'-----------')
+        })
+      },5000)
+      return () => clearInterval(interval)
+
+  },[])
+  let [fontsLoaded] = useFonts({Barlow_700Bold})
   if(!fontsLoaded){
     return null
   }
+
+  
     return(
         <SafeAreaView style={styles.container}>
           <HeaderNotification block={"Galpão"} campus={"2"} iqarConcept={"Ruim"}/>
