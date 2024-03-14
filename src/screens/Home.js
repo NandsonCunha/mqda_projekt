@@ -7,9 +7,12 @@ import {useFonts,Barlow_700Bold} from '@expo-google-fonts/barlow'
 import * as Location from 'expo-location'
 import { distaceCalculator } from '../helpers/Haversine';
 import { methodGet } from '../helpers/GetAxios';
+import { useIsFocused } from '@react-navigation/native';
 export default function Home(){
   const [location,setLocation] = useState()
+  const isFocused = useIsFocused()
   useEffect(()=>{
+
      const getPermissions = async () => {
       let {status} = await Location.requestForegroundPermissionsAsync()
       if(status !== 'granted'){
@@ -22,20 +25,36 @@ export default function Home(){
       console.log("Location:")
       console.log(currentLocation)
      // distaceCalculator(currentLocation.coords.latitude,currentLocation.coords.longitude,-5.334071,-49.088110)
+     const newRoom = []
+      if (currentLocation) {
+        const getRooms = await methodGet('http://10.204.21.154:4000/show-all-rooms').then((response) => { return response }).catch(error => console.log(Object.values(error)))
+        if(getRooms){
+          console.log(getRooms.rooms)
+          getRooms.rooms.map((room) => {
+              if (room.lat && room.long) {
+                  let dataDistance = distaceCalculator(currentLocation.coords.latitude, currentLocation.coords.longitude, room.lat, room.long)
+                  newRoom.push({ room, dataDistance })
+              }  
+          })
+          console.log('new room ------', newRoom)
+          let minDistance = Infinity;
+          let closestRoom = null;
+  
+          newRoom.forEach(item => {
+              if (parseFloat(item.dataDistance) < minDistance) {
+                  minDistance = parseFloat(item.dataDistance);
+                  closestRoom = item.room;
+              }
+          });
+  
+          console.log('Sala mais próxima:', closestRoom)
+        }
+
     }
-
-      
-     const interval = setInterval(async() => {
-        getPermissions()
-        const getRooms =  await methodGet('http://10.204.20.139:4000/show-all-rooms').then((response)=> {return response}).catch(error => console.log(Object.values(error)))
-        getRooms.rooms.map((room)=>{
-           distaceCalculator(location.coords.latitude,location.coords.longitude,room.lat,room.long)
-           console.log('------------',room,'-----------')
-        })
-      },5000)
-      return () => clearInterval(interval)
-
-  },[])
+    
+    }
+ getPermissions()
+  },[isFocused])
   let [fontsLoaded] = useFonts({Barlow_700Bold})
   if(!fontsLoaded){
     return null
@@ -103,3 +122,5 @@ const styles = StyleSheet.create({
       fontFamily:'Barlow_700Bold'
     }
   });
+  //coment
+  //coment 2

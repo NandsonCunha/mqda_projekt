@@ -13,8 +13,8 @@ export function distaceCalculator(lat1,lon1,lat2,lon2){
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     
-    console.log('Distância entre o usuário e a localidade:', distance.toFixed(2), 'quilômetros');
-    return distance
+    //console.log('Distância entre o usuário e a localidade:', distance.toFixed(2), 'quilômetros');
+    return distance.toFixed(2)
 }
 
 //aa
