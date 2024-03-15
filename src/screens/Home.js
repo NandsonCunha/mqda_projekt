@@ -11,6 +11,8 @@ import { useIsFocused } from '@react-navigation/native';
 export default function Home(){
   const [location,setLocation] = useState()
   const isFocused = useIsFocused()
+  const [dataRoom,setDataRoom] = useState()
+  let ip = '10.204.23.181:4000'
   useEffect(()=>{
 
      const getPermissions = async () => {
@@ -27,7 +29,7 @@ export default function Home(){
      // distaceCalculator(currentLocation.coords.latitude,currentLocation.coords.longitude,-5.334071,-49.088110)
      const newRoom = []
       if (currentLocation) {
-        const getRooms = await methodGet('http://10.204.21.154:4000/show-all-rooms').then((response) => { return response }).catch(error => console.log(Object.values(error)))
+        const getRooms = await methodGet(`http://${ip}/show-all-rooms`).then((response) => { return response }).catch(error => console.log(Object.values(error)))
         if(getRooms){
           console.log(getRooms.rooms)
           getRooms.rooms.map((room) => {
@@ -48,6 +50,13 @@ export default function Home(){
           });
   
           console.log('Sala mais próxima:', closestRoom)
+          const getLastRoomById = await methodGet(`http://${ip}/show-all-docs/${closestRoom.id}`)
+          if(getLastRoomById){
+            console.log('----------------')
+            console.log('dado da sala',getLastRoomById)
+            setDataRoom(getLastRoomById)
+          }
+          
         }
 
     }
