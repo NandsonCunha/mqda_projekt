@@ -4,39 +4,34 @@ import { SafeAreaView, TextInput} from 'react-native';
 import RNSpeedometer from 'react-native-speedometer'
 
 
-export  function SpeedometerJustIqar({nameGas,iqarGas}){ 
+export  function SpeedometerJustHeatIndex({heatIndex}){ 
 
     return(
           <RNSpeedometer 
-          value={iqarGas === '' || iqarGas === undefined ? 0 : iqarGas} 
+          value={heatIndex === '' || heatIndex === undefined ? 0 : heatIndex} 
           size={150}
           minValue={0}
-          maxValue={400}
+          maxValue={56}
           labels={[
             {
-                name: `Boa - ${nameGas}`,
+                name: `Calor - Cuidado`,
                 labelColor: '#008000',
                 activeBarColor: '#008000',
               },
               {
-                name: `Moderada - ${nameGas}`,
+                name: `Calor - Cuidado extremo`,
                 labelColor: '#FFFF00',
                 activeBarColor: '#FFFF00',
               },
               {
-                name: `Ruim - ${nameGas}`,
+                name: `Calor - Perigo`,
                 labelColor: '#FFA500',
                 activeBarColor: '#FFA500',
               },
               {
-                name: `Muito Ruim - ${nameGas}`,
+                name: `Calor - Perigo extremo`,
                 labelColor: '#FF0000',
                 activeBarColor: '#FF0000',
-              },
-              {
-                name: `Péssima - ${nameGas}`,
-                labelColor: '#993399',
-                activeBarColor: '#993399',
               },
           ]}
           innerCircleStyle={
