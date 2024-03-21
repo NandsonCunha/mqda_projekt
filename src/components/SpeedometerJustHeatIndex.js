@@ -20,7 +20,7 @@ export  function SpeedometerJustHeatIndex({heatIndex}){
               },
               {
                 name: `Calor - Cuidado extremo`,
-                labelColor: '#FFFF00',
+                labelColor: '#ffdd59',
                 activeBarColor: '#FFFF00',
               },
               {

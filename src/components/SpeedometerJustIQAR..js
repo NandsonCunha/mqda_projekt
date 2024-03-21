@@ -20,7 +20,7 @@ export  function SpeedometerJustIqar({nameGas,iqarGas}){
               },
               {
                 name: `Moderada - ${nameGas}`,
-                labelColor: '#FFFF00',
+                labelColor: '#ffdd59',
                 activeBarColor: '#FFFF00',
               },
               {

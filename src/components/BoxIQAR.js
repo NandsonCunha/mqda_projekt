@@ -9,7 +9,21 @@ export default function BoxIQAR({ valueIQAR, status }) {
       {valueIQAR !== "" ? (
         <View style={[styles.containerBox, styles.shadowProp]}>
           <Text>IQar:</Text>
-          <Text style={styles.iqarValue}>{valueIQAR}</Text>
+          <Text
+            style={[
+              valueIQAR >=0 && valueIQAR <=40
+                ? { color: "#008000" }
+                : valueIQAR >40 && valueIQAR <= 80
+                ? { color: "#ECD537" }
+                : valueIQAR>80 && valueIQAR <= 120
+                ? { color: "#FFA500" }
+                : valueIQAR > 120 && valueIQAR <= 200
+                ? { color: "#FF0000" }
+                : valueIQAR > 200 && valueIQAR <= 400
+                ? { color: "#993399" }
+                : "0",
+            ,styles.iqarValue]}
+          >{valueIQAR}</Text>
         </View>
       ) : (
         <View
@@ -47,7 +61,7 @@ export default function BoxIQAR({ valueIQAR, status }) {
           </Text>
           <Text
             style={[
-              status === "Boa"
+              valueIQAR === "Boa"
                 ? { color: "#FFFFFF", fontSize: 35 }
                 : status === "Moderada"
                 ? { color: "#FFFFFF", fontSize: 25 }
@@ -57,7 +71,7 @@ export default function BoxIQAR({ valueIQAR, status }) {
                 ? { color: "#FFFFFF", fontSize: 20 }
                 : status === "Péssima"
                 ? { color: "#FFFFFF", fontSize: 30 }
-                : "0",
+                : "0",{fontSize:30,color:'white'}
             ]}
           >
             {status}
@@ -90,6 +104,5 @@ const styles = StyleSheet.create({
   },
   iqarValue: {
     fontSize: 44,
-    color: "#5CA784",
   },
 });
