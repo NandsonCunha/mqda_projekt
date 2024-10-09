@@ -2,28 +2,40 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
+import { handleNotification } from '../helpers/HandleNotification';
 
-export default function ConfigNotification({nameGas}) {
+
+export default function ConfigNotification({nameGas,qualityAir}) {
     const [isLigado, setIsLigado] = useState(false);
-
+    const [gasSelected,setGasSelected] = useState('')
 
     const handleToggleSwitch = () => {
+        if(isLigado === true) {
+           console.log("ligado")
+        } 
+        if(isLigado === false) {
+          if(gasSelected === qualityAir){
+            handleNotification(nameGas,qualityAir)
+          }
+        }
         setIsLigado(!isLigado);
     };
 
-    const iqar = ["Boa", "Moderada", "Ruim", "Muito Ruim", "Péssimo"]
+    const iqar = ['Boa', 'Moderada', 'Ruim', 'Muito Ruim', 'Péssima']
+    const temp = ["Cuidado","Cuidado extremo","Perigo","Perigo extremo"]
 
   return(
   <View style={styles.containerMenor}>
     <View style={styles.containerSel}>
       <Text style={styles.text}>Nível de {nameGas}:</Text>
-
       <SelectDropdown
-        data={iqar}
+        data={nameGas === "CO" ? iqar : nameGas === "Ozônio" ? iqar : temp}
         rowStyle={styles.selectDropdownRow}
         selectedRowStyle={styles.select}
         onSelect={(selectedItem, index) => {
+          setGasSelected('')
           console.log(selectedItem + ` ${nameGas}`, index);
+          setGasSelected(selectedItem)
         }}
         buttonTextAfterSelection={(selectedItem, index) => {
           return selectedItem;

@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useContext, useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,6 +7,8 @@ import {
   View,
   ScrollView,
 } from "react-native";
+import { DataContext } from "../Contexts/DataRoomContext";
+import { useRoute } from "@react-navigation/native";
 import SpeedDometer from "../components/speedometer";
 import HeaderNotification from "../components/HeaderInformation";
 import BoxIQAR from "../components/BoxIQAR";
@@ -20,10 +22,10 @@ import { SpeedometerJustHeatIndex } from "../components/SpeedometerJustHeatIndex
 export default function Home() {
   const [location, setLocation] = useState();
   const isFocused = useIsFocused();
-  const [dataRoom, setDataRoom] = useState(null);
+  const {dataRoom,setDataRoom}= useContext(DataContext);
   const [iqar, setIQAR] = useState();
   const [proxRoom, setProxRoom] = useState();
-  let ip = "10.204.22.35:4000";
+  let ip = "192.168.1.6:4000";
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -247,7 +249,7 @@ export default function Home() {
         </>
       ) : (
         <Text>Carregando...</Text>
-      )}
+      )} 
     </SafeAreaView>
   );
 }

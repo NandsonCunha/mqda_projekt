@@ -1,136 +1,135 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, ScrollView,TextInput} from 'react-native';
-import Input from '../components/input';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import {useFonts,Barlow_500Medium,Barlow_600SemiBold,Barlow_700Bold} from '@expo-google-fonts/barlow'
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  Alert,
+} from "react-native";
+import Input from "../components/input";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  useFonts,
+  Barlow_500Medium,
+  Barlow_600SemiBold,
+  Barlow_700Bold,
+} from "@expo-google-fonts/barlow";
+import { CreatePoluentsForSensor } from "../helpers/PostCreateSensors";
 
+const TelaCadastro = ({ navigation }) => {
+  const [idSensor, setIdSensor] = useState("");
+  let ip = "192.168.1.6:4000";
+  const handleProximo = async () => {
+    if (!idSensor) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+    } else {
+      try {
+        // Chama a função de criação de sensores e recebe o status geral
+        const createSensors = await CreatePoluentsForSensor(
+          idSensor,
+          `http://${ip}/create-sensors`
+        );
 
-const TelaCadastro = ({navigation}) => {
-  const [setIdSensor,idSensor] = useState()
-  const [setNameEntity,nameEntity] = useState()
-  const [type,setType] = useState()
-  const [object,setObject] = useState()
-  const [setNameAtribute,nameAtribute] = useState()
-  const [referenceTable,setReferenceTable] = useState()
+        // Verifica se todos os sensores foram criados com sucesso
+        if (createSensors.every((sensor) => sensor.status === "success")) {
+          Alert.alert(
+            "Sucesso",
+            "Todos os sensores foram criados com sucesso!"
+          );
+          setIdSensor("");
+          navigation.navigate("Home");
+        } else if (
+          createSensors.some((sensor) => sensor.status === "duplicate")
+        ) {
+          Alert.alert("Aviso", "Este sensor ja existe");
+        } else {
+          Alert.alert("Erro", "Houve um erro ao criar alguns sensores.");
+        }
+      } catch (error) {
+        console.error("Erro na criação dos sensores:", error);
+        Alert.alert("Erro", "Ocorreu um erro ao criar os sensores.");
+      }
+    }
+  };
+  let [fontsLoaded] = useFonts({
+    Barlow_500Medium,
+    Barlow_600SemiBold,
+    Barlow_700Bold,
+  });
 
-  const handleProximo = () => {
-    if (!idSensor || !nameEntity || !type || !object || !nameAtribute || !referenceTable) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos.')
-  }
-  else{
-    navigation.navigate('Sensor')
-  }
-  }
-  let [fontsLoaded] = useFonts({Barlow_500Medium,Barlow_600SemiBold,Barlow_700Bold})
-
-  if(!fontsLoaded){
-    return null
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
     <>
-     <SafeAreaView style={styles.container}>
-      <Text style={styles.titulo}>CADASTRO DE SENSOR</Text>
-    <ScrollView style={styles.scrolls}>
-    <View>
-                    <Text style={styles.text}>ID Sensor:</Text>
-                    <TextInput
-                        style={styles.inputCont}
-                        onChangeText={(text) => setIdSensor(text)}
-                        value={idSensor}
-                    />
-                </View>
-                <View>
-                    <Text style={styles.text}>Nome entidade:</Text>
-                    <TextInput
-                        style={styles.inputCont}
-                        onChangeText={(text) => setNameEntity(text)}
-                        value={nameEntity}
-                    />
-                </View>
-                <View>
-                    <Text style={styles.text}>Tipo:</Text>
-                    <TextInput
-                        style={styles.inputCont}
-                        onChangeText={(text) => setType(text)}
-                        value={type}
-                    />
-                </View>
-                <View>
-                    <Text style={styles.text}>Objeto ID:</Text>
-                    <TextInput
-                        style={styles.inputCont}
-                        onChangeText={(text) => setObject(text)}
-                        value={object}
-                    />
-                </View>
-                <View>
-                    <Text style={styles.text}>Nome Atributo:</Text>
-                    <TextInput
-                        style={styles.inputCont}
-                        onChangeText={(text) => setNameAtribute(text)}
-                        value={nameAtribute}
-                    />
-                </View>
-                <View>
-                    <Text style={styles.text}>Referencia Tabela:</Text>
-                    <TextInput
-                        style={styles.inputCont}
-                        onChangeText={(text) => setReferenceTable(text)}
-                        value={referenceTable}
-                    />
-                </View>
-                <View>
-                </View>
-    </ScrollView>
-    <Button style={[styles.buttn,styles.textButton]} color={'#0FA958'} title="Criar" onPress={() => navigation.navigate('Home')} />
-
-    </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.titulo}>CADASTRO DE SENSOR</Text>
+        <ScrollView style={styles.scrolls}>
+          <View>
+            <Text style={styles.text}>ID Sensor:</Text>
+            <TextInput
+              style={styles.inputCont}
+              onChangeText={(text) => setIdSensor(text)}
+              value={idSensor}
+            />
+          </View>
+          <View></View>
+        </ScrollView>
+        <Button
+          style={[styles.buttn, styles.textButton]}
+          color={"#0FA958"}
+          title="Criar"
+          onPress={handleProximo}
+        />
+      </SafeAreaView>
     </>
-   
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 61,backgroundColor: '#F0FFF8',
-    width:'100%'  
+    padding: 61,
+    backgroundColor: "#F0FFF8",
+    width: "100%",
   },
   titulo: {
     fontSize: 25,
     marginBottom: 20,
-    fontFamily:"Barlow_700Bold"
+    fontFamily: "Barlow_700Bold",
   },
-  buttn:{
+  buttn: {
     height: 40,
-    marginTop:20
+    marginTop: 20,
   },
-  scrolls:{
-    marginBottom:50
+  scrolls: {
+    marginBottom: 50,
   },
-  textButton:{
-    fontFamily:"Barlow_700Bold",
-    fontSize:25
+  textButton: {
+    fontFamily: "Barlow_700Bold",
+    fontSize: 25,
   },
-  text:{
-    fontSize:18,
-    fontFamily:'Barlow_600SemiBold',
-    color: '#0FA958',
-    marginBottom:8
-
+  text: {
+    fontSize: 18,
+    fontFamily: "Barlow_600SemiBold",
+    color: "#0FA958",
+    marginBottom: 8,
   },
   inputCont: {
-    width: '100%',
+    width: "100%",
     backgroundColor: "#E5E5E5",
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 0,
     padding: 10,
     marginBottom: 10,
-    borderRadius:6.25
-},
+    borderRadius: 6.25,
+  },
 });
 
 export default TelaCadastro;

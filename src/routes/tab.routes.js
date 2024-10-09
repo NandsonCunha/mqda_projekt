@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text } from "react-native-elements";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Home from "../screens/Home";
+import { DataProvider } from "../Contexts/DataRoomContext";
 import Notification from "../screens/Notification";
 import TelaCadastro from "../screens/registerSensor";
 import { View, Image, StyleSheet } from "react-native";
@@ -15,6 +16,7 @@ const Stack = createNativeStackNavigator();
 
 function HomeTabs(){
     return (
+      <DataProvider>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             headerShown: true,
@@ -143,6 +145,7 @@ function HomeTabs(){
                 })}
               />
         </Tab.Navigator>
+        </DataProvider>
       );
 }
 
