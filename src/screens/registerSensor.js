@@ -20,8 +20,11 @@ import {
 import { CreatePoluentsForSensor } from "../helpers/PostCreateSensors";
 
 const TelaCadastro = ({ navigation }) => {
+  // Estado para capturar o ID do sensor
   const [idSensor, setIdSensor] = useState("");
-  let ip = "192.168.1.6:4000";
+    // IP do servidor para criação de sensores
+  let ip = "10.204.21.135:4000";
+  // Função que lida com o evento de criação de sensor
   const handleProximo = async () => {
     if (!idSensor) {
       Alert.alert("Erro", "Por favor, preencha todos os campos.");
@@ -39,8 +42,8 @@ const TelaCadastro = ({ navigation }) => {
             "Sucesso",
             "Todos os sensores foram criados com sucesso!"
           );
-          setIdSensor("");
-          navigation.navigate("Home");
+          setIdSensor("");// Limpa o campo ID do sensor
+          navigation.navigate("Home");// Navega para a tela inicial
         } else if (
           createSensors.some((sensor) => sensor.status === "duplicate")
         ) {
@@ -54,12 +57,13 @@ const TelaCadastro = ({ navigation }) => {
       }
     }
   };
+    // Carrega as fontes personalizadas do Google Fonts
   let [fontsLoaded] = useFonts({
     Barlow_500Medium,
     Barlow_600SemiBold,
     Barlow_700Bold,
   });
-
+// Retorna nulo enquanto as fontes são carregadas
   if (!fontsLoaded) {
     return null;
   }

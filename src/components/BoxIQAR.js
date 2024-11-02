@@ -3,47 +3,55 @@ import { SafeAreaView, StyleSheet, TextInput, Text } from "react-native";
 import { View } from "react-native";
 import { color } from "react-native-elements/dist/helpers";
 
+// Componente que exibe o valor de IQAR e o status baseado em condições específicas
 export default function BoxIQAR({ valueIQAR, status }) {
   return (
     <>
-      {valueIQAR !== "" ? (
+      {valueIQAR !== "" ? ( // Verifica se há um valor de IQAR
         <View style={[styles.containerBox, styles.shadowProp]}>
           <Text>IQar:</Text>
           <Text
             style={[
-              valueIQAR >=0 && valueIQAR <=40
-                ? { color: "#008000" }
-                : valueIQAR >40 && valueIQAR <= 80
-                ? { color: "#ECD537" }
-                : valueIQAR>80 && valueIQAR <= 120
-                ? { color: "#FFA500" }
+              // Define a cor do texto com base nos intervalos do valor de IQAR
+              valueIQAR >= 0 && valueIQAR <= 40
+                ? { color: "#008000" } // Verde para bons níveis de IQAR
+                : valueIQAR > 40 && valueIQAR <= 80
+                ? { color: "#ECD537" } // Amarelo para níveis moderados
+                : valueIQAR > 80 && valueIQAR <= 120
+                ? { color: "#FFA500" } // Laranja para níveis ruins
                 : valueIQAR > 120 && valueIQAR <= 200
-                ? { color: "#FF0000" }
+                ? { color: "#FF0000" } // Vermelho para níveis muito ruins
                 : valueIQAR > 200 && valueIQAR <= 400
-                ? { color: "#993399" }
+                ? { color: "#993399" } // Roxo para níveis péssimos
                 : "0",
-            ,styles.iqarValue]}
-          >{valueIQAR}</Text>
+              styles.iqarValue,
+            ]}
+          >
+            {valueIQAR}
+          </Text>
         </View>
       ) : (
+        // Quando não há um valor de IQAR, mostra o status geral
         <View
           style={[
             styles.containerBox,
+            // Define as cores de fundo e borda com base no status recebido
             status === "Boa"
-              ? { borderColor: "#008000", borderWidth: 2, backgroundColor:'#008000' }
+              ? { borderColor: "#008000", borderWidth: 2, backgroundColor: "#008000" }
               : status === "Moderada"
-              ? { borderColor: "#FFFFFF", borderWidth: 2,backgroundColor:'#ECD537' }
+              ? { borderColor: "#FFFFFF", borderWidth: 2, backgroundColor: "#ECD537" }
               : status === "Ruim"
-              ? { borderColor: "#FFA500", borderWidth: 2 ,backgroundColor:'#FFA500'}
+              ? { borderColor: "#FFA500", borderWidth: 2, backgroundColor: "#FFA500" }
               : status === "Muito Ruim"
-              ? { borderColor: "#FF0000", borderWidth: 2 , backgroundColor:'#FF0000' }
+              ? { borderColor: "#FF0000", borderWidth: 2, backgroundColor: "#FF0000" }
               : status === "Péssima"
-              ? { borderColor: "#993399", borderWidth: 2, backgroundColor:'#993399' }
+              ? { borderColor: "#993399", borderWidth: 2, backgroundColor: "#993399" }
               : "0",
           ]}
         >
           <Text
             style={[
+              // Define a cor do texto para cada status específico
               status === "Boa"
                 ? { color: "#FFFFFF" }
                 : status === "Moderada"
@@ -61,6 +69,7 @@ export default function BoxIQAR({ valueIQAR, status }) {
           </Text>
           <Text
             style={[
+              // Ajusta o estilo do texto com base no status
               valueIQAR === "Boa"
                 ? { color: "#FFFFFF", fontSize: 35 }
                 : status === "Moderada"
@@ -71,7 +80,7 @@ export default function BoxIQAR({ valueIQAR, status }) {
                 ? { color: "#FFFFFF", fontSize: 20 }
                 : status === "Péssima"
                 ? { color: "#FFFFFF", fontSize: 30 }
-                : "0",{fontSize:30,color:'white'}
+                : "0", { fontSize: 30, color: 'white' }
             ]}
           >
             {status}
@@ -81,6 +90,8 @@ export default function BoxIQAR({ valueIQAR, status }) {
     </>
   );
 }
+
+// Estilos utilizados no componente
 const styles = StyleSheet.create({
   containerBox: {
     width: "35%",

@@ -4,7 +4,7 @@ import qs from "qs"
 export async function CreatePoluentsForSensor(id,url) {
     
 
-
+// dados de gases dos sensroes que serão criados passando o id
 const sensorData = [
   {
     device_id: `CO_MQ7_${id}`,
@@ -140,13 +140,15 @@ const sensorData = [
 
 const results = await Promise.all(
   sensorData.map(async (sensor) => {
+    //transforma os dados em string
     const data = qs.stringify(sensor);
 
     try {
+      // configuração de requisição
       const response = await axios({
         method: "post",
         maxBodyLength: Infinity,
-        url: url,
+        url: url, // especificando a url para encaminhar a requisição
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -162,6 +164,7 @@ const results = await Promise.all(
           message: responseMessage,
         };
       } else {
+      // se o sensor não exisitr, ele sera criado no banco
         return {
           device_id: sensor.device_id,
           status: "success",

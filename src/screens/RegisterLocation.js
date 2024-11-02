@@ -8,17 +8,12 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import Input from "../components/input";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  useFonts,
-  Barlow_500Medium,
-  Barlow_600SemiBold,
-  Barlow_700Bold,
-} from "@expo-google-fonts/barlow";
+import { useFonts, Barlow_500Medium, Barlow_600SemiBold, Barlow_700Bold } from "@expo-google-fonts/barlow";
 import { CreateRoom } from "../helpers/PostCreateRoomAxios";
 
 export function RegisterLocation({ navigation }) {
+  // Estados para capturar os dados do formulário
   const [idLocal, setIdLocal] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -27,66 +22,55 @@ export function RegisterLocation({ navigation }) {
   const [campus, setCampus] = useState("");
   const [lat, setLat] = useState("");
   const [long, setLong] = useState("");
-  let ip = "192.168.1.6:4000";
+  
+  // IP do servidor para criação da sala
+  let ip = "10.204.21.135:4000";
 
+  // Função que envia os dados do formulário e lida com a resposta
   const handleProximo = async () => {
-    if (
-      !idLocal ||
-      !name ||
-      !description ||
-      !block ||
-      !level ||
-      !campus ||
-      !lat ||
-      !long
-    ) {
+    if (!idLocal || !name || !description || !block || !level || !campus || !lat || !long) {
       Alert.alert("Erro", "Por favor, preencha todos os campos.");
     } else {
       const createRoom = await CreateRoom(
-        idLocal,
-        name,
-        description,
-        block,
-        level,
-        campus,
-        lat,
-        long,
+        idLocal, name, description, block, level, campus, lat, long,
         `http://${ip}/create-room`
       )
-        .then((response) => {
-          if (JSON.parse(response).ibm !== "Documento já existe") {
-            Alert.alert("Aviso", JSON.parse(response).ibm);
-            setIdLocal("");
-            setName("");
-            setDescription("");
-            setBlock("");
-            setLevel("");
-            setCampus("");
-            setLat("");
-            setLong("");
-            navigation.navigate("Sensor");
-          }
-          if (JSON.parse(response).ibm === "Documento já existe") {
-            Alert.alert("Aviso", JSON.parse(response).ibm);
-          }
-          return response;
-        })
-        .catch((error) => console.log(Object.values(error)));
+      .then((response) => {
+        const parsedResponse = JSON.parse(response);
+        
+        // Checa se o documento já existe
+        if (parsedResponse.ibm !== "Documento já existe") {
+          Alert.alert("Aviso", parsedResponse.ibm);
+          
+          // Limpa o formulário e navega para a tela do sensor
+          setIdLocal(""); setName(""); setDescription(""); setBlock("");
+          setLevel(""); setCampus(""); setLat(""); setLong("");
+          navigation.navigate("Sensor");
+        } else {
+          Alert.alert("Aviso", parsedResponse.ibm);
+        }
+        return response;
+      })
+      .catch((error) => console.log(Object.values(error)));
     }
   };
+
+  // Carrega fontes personalizadas
   let [fontsLoaded] = useFonts({
-    Barlow_500Medium,
-    Barlow_600SemiBold,
-    Barlow_700Bold,
+    Barlow_500Medium, Barlow_600SemiBold, Barlow_700Bold,
   });
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  // Retorna nulo enquanto as fontes estão sendo carregadas
+  if (!fontsLoaded) return null;
+
   return (
     <SafeAreaView style={styles.container}>
+      {/* Título da tela */}
       <Text style={styles.titulo}>CADASTRO LOCAL</Text>
+      
+      {/* Formulário para capturar dados de cadastro */}
       <ScrollView>
+        {/* Input para ID do local */}
         <View>
           <Text style={styles.text}>ID Local:</Text>
           <TextInput
@@ -96,6 +80,8 @@ export function RegisterLocation({ navigation }) {
             placeholder="Ex:001"
           />
         </View>
+        
+        {/* Repetição de blocos de inputs para outros dados */}
         <View>
           <Text style={styles.text}>Nome:</Text>
           <TextInput
@@ -105,15 +91,17 @@ export function RegisterLocation({ navigation }) {
             placeholder="Ex:Lab transporte"
           />
         </View>
+        
         <View>
           <Text style={styles.text}>Descrição:</Text>
           <TextInput
             style={styles.inputCont}
             onChangeText={(text) => setDescription(text)}
             value={description}
-            placeholder="Ex:Laboratorio destinado de execução em  pratica para disciplinas de engenharia"
+            placeholder="Ex:Laboratório para prática de disciplinas de engenharia"
           />
         </View>
+        
         <View>
           <Text style={styles.text}>Bloco:</Text>
           <TextInput
@@ -123,6 +111,7 @@ export function RegisterLocation({ navigation }) {
             placeholder="Ex:4"
           />
         </View>
+        
         <View>
           <Text style={styles.text}>Nível:</Text>
           <TextInput
@@ -132,6 +121,7 @@ export function RegisterLocation({ navigation }) {
             placeholder="Ex:1"
           />
         </View>
+        
         <View>
           <Text style={styles.text}>Campus:</Text>
           <TextInput
@@ -141,6 +131,7 @@ export function RegisterLocation({ navigation }) {
             placeholder="Ex:2"
           />
         </View>
+        
         <View>
           <Text style={styles.text}>Latitude</Text>
           <TextInput
@@ -150,6 +141,7 @@ export function RegisterLocation({ navigation }) {
             placeholder="Ex:-5.334071"
           />
         </View>
+        
         <View>
           <Text style={styles.text}>Longitude</Text>
           <TextInput
@@ -160,6 +152,8 @@ export function RegisterLocation({ navigation }) {
           />
         </View>
       </ScrollView>
+      
+      {/* Botão para submeter o formulário */}
       <Button
         style={styles.buttn}
         height={70}
@@ -171,6 +165,7 @@ export function RegisterLocation({ navigation }) {
   );
 }
 
+// Estilos para a tela e seus elementos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -198,7 +193,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "gray",
     borderWidth: 0.5,
-    borderRadius: 0,
     padding: 10,
     marginBottom: 10,
     borderRadius: 6.25,

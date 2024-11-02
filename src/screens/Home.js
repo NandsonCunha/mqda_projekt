@@ -1,3 +1,5 @@
+
+
 import React, { Component, useContext, useEffect, useState } from "react";
 import {
   SafeAreaView,
@@ -20,12 +22,14 @@ import { useIsFocused } from "@react-navigation/native";
 import { SpeedometerJustIqar } from "../components/SpeedometerJustIQAR.";
 import { SpeedometerJustHeatIndex } from "../components/SpeedometerJustHeatIndex";
 export default function Home() {
+  // Definição de estados para dados de localização e sala
   const [location, setLocation] = useState();
   const isFocused = useIsFocused();
   const {dataRoom,setDataRoom}= useContext(DataContext);
   const [iqar, setIQAR] = useState();
   const [proxRoom, setProxRoom] = useState();
-  let ip = "192.168.1.6:4000";
+  let ip = "10.204.21.135:4000";
+  // Solicita permissão de localização e busca dados de salas
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -60,6 +64,7 @@ export default function Home() {
             }
           });
           console.log("new room ------", newRoom);
+          // Determina a sala mais próxima com base na distância
           let minDistance = Infinity;
           let closestRoom = null;
 
@@ -71,6 +76,8 @@ export default function Home() {
           });
           setProxRoom(closestRoom);
           console.log("Sala mais próxima:", closestRoom);
+
+          // Obtém dados da sala mais próxima por ID
           const getLastRoomById = await methodGet(
             `http://${ip}/show-all-docs/${closestRoom.id}`
           );
@@ -93,6 +100,7 @@ export default function Home() {
     };
     getPermissions();
   }, [isFocused]);
+   // Carrega fontes personalizadas e aguarda seu carregamento
   let [fontsLoaded] = useFonts({ Barlow_700Bold });
   if (!fontsLoaded) {
     return null;
